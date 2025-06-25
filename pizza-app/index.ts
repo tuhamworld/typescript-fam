@@ -1,3 +1,10 @@
+// Defining custom type
+type Pizza = {
+  name: string
+  price: number
+}
+
+
 const menu = [
   { name: "Margherita", price: 8 },
   { name: "Pepperoni", price: 10 },
@@ -9,16 +16,16 @@ let cashInRegister = 100;
 let nextOrderId = 1;
 const orderQueue = [];
 
-const addNewPizza = (pizza) => {
-  if (pizza && pizza.name && pizza.price) {
-    menu.push(pizza);
+const addNewPizza = (pizzaObj: Pizza) => {
+  if (pizzaObj && pizzaObj.name && pizzaObj.price) {
+    menu.push(pizzaObj);
   } else {
     console.log("Pizza details incomplete");
   }
 };
 
 
-const placeOrder = (pizzaName) => {
+const placeOrder = (pizzaName: string) => {
   const selectedPizza = menu.find((menuItem) => menuItem.name === pizzaName);
   if (!selectedPizza) {
     console.error(`${pizzaName} does not exist`);
