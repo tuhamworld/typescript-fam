@@ -1,9 +1,15 @@
-// Defining custom type
+// Defining custom type for Pizza
 type Pizza = {
   name: string
   price: number
 }
 
+// Defining custom type for Order
+type Order = {
+  id: number,
+  pizza: Pizza,
+  status: string
+}
 
 const menu = [
   { name: "Margherita", price: 8 },
@@ -14,7 +20,7 @@ const menu = [
 
 let cashInRegister = 100;
 let nextOrderId = 1;
-const orderQueue = [];
+const orderQueue: Order[] = [];
 
 const addNewPizza = (pizzaObj: Pizza) => {
   if (pizzaObj && pizzaObj.name && pizzaObj.price) {
@@ -32,7 +38,7 @@ const placeOrder = (pizzaName: string) => {
     return;
   }
   cashInRegister += selectedPizza.price;
-  const newOrder = {
+  const newOrder: Order = {
     id: nextOrderId++,
     pizza: selectedPizza,
     status: "ordered",
