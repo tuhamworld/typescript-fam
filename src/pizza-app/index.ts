@@ -1,43 +1,58 @@
 // Defining custom type for Pizza
 type Pizza = {
-  id: number
-  name: string
-  price: number
-}
+  id: number;
+  name: string;
+  price: number;
+};
 
 // Defining custom type for Order
 type Order = {
-  id: number,
-  pizza: Pizza,
-  status: "ordered" | "completed"
-}
-
-
-// Pizza Menu
-const menu: Pizza[] = [
-  { id: 1, name: "Margherita", price: 8 },
-  { id: 2, name: "Pepperoni", price: 10 },
-  { id: 3, name: "Hawaiian", price: 10 },
-  { id: 4, name: "Veggie", price: 9 },
-];
+  id: number;
+  pizza: Pizza;
+  status: "ordered" | "completed";
+};
 
 let cashInRegister = 100;
 let nextOrderId = 1;
-const orderHistory: Order[]= [];
+let nextPizzaId = 1;
 
+// Pizza Menu
+const menu: Pizza[] = [
+  { id: nextPizzaId++, name: "Margherita", price: 8 },
+  { id: nextPizzaId++, name: "Pepperoni", price: 10 },
+  { id: nextPizzaId++, name: "Hawaiian", price: 10 },
+  { id: nextPizzaId++, name: "Veggie", price: 9 },
+];
+
+const orderQueue: Order[] = [];
 
 // Adding new Pizza Function
-const addNewPizza = (pizzaObj: Pizza): void => {
-  if (pizzaObj && pizzaObj.name && pizzaObj.price) {
-    menu.push(pizzaObj);
-  } else {
-    console.log("Pizza details incomplete");
-  }
+// Accepts an object without id, assigns id inside
+
+/**
+ * Challenge:
+ * Fix the addNewPizza function using the Omit utility type. This might
+ * require more than just changing the "Pizza" typed `pizzaObj` parameter.
+ * Return the new pizza object (with the id added) from the function.
+ */
+
+const addNewPizza = (pizzaObj: Omit<Pizza, "id">): Pizza => {
+ const newPizza: Pizza = {
+      id: nextPizzaId++,
+      ...pizzaObj,
+    };
+
+    menu.push(newPizza);
+    return newPizza;
 };
 
+addNewPizza({ name: "Golden morn", price: 25 });
+addNewPizza({ name: "Macaroni", price: 15 });
+addNewPizza({ name: "Sweet Potatoes", price: 35 });
+addNewPizza({ name: "Agbalumo", price: 75 });
 
 // Placing order function
-const placeOrder = (pizzaName: string): Order[] | undefined => {
+const placeOrder = (pizzaName: string): Order | undefined => {
   const selectedPizza = menu.find((menuItem) => menuItem.name === pizzaName);
   if (!selectedPizza) {
     console.error(`${pizzaName} does not exist`);
@@ -49,14 +64,13 @@ const placeOrder = (pizzaName: string): Order[] | undefined => {
     pizza: selectedPizza,
     status: "ordered",
   };
-  orderHistory.push(newOrder);
-  console.log("New Order: ", newOrder)
-  return orderHistory;
+  orderQueue.push(newOrder);
+  return newOrder;
 };
 
 // Completing Order function
 const completeOrder = (orderId: number): Order | undefined => {
-  const orderItem = orderHistory.find((item) => item.id === orderId);
+  const orderItem = orderQueue.find((item) => item.id === orderId);
   if (!orderItem) {
     console.error(`${orderId} does not exist`);
     return;
@@ -65,25 +79,30 @@ const completeOrder = (orderId: number): Order | undefined => {
   return orderItem;
 };
 
-
 // Getting Pizza Details (type narrowing)
 
-export const getPizzaDetails = (identifier: string | number) => {
+export const getPizzaDetails = (
+  identifier: string | number
+): Pizza | undefined => {
   if (typeof identifier === "string") {
-    return menu.find((pizza) => pizza.name.toLowerCase() === identifier.toLowerCase());
+    return menu.find(
+      (pizza) => pizza.name.toLowerCase() === identifier.toLowerCase()
+    );
   } else if (typeof identifier === "number") {
     return menu.find((pizza) => pizza.id === identifier);
- } else {
-    throw new TypeError("Parameter `identifier` must either be a string or a number");
- }
-}
+  } else {
+    throw new TypeError(
+      "Parameter `identifier` must either be a string or a number"
+    );
+  }
+};
 
-addNewPizza({id: 5, name: "Golden morn", price: 25 });
-addNewPizza({id: 6, name: "Macaroni", price: 15 });
-addNewPizza({id: 7, name: "Sweet Potatoes", price: 35 });
 placeOrder("Sweet Potatoes");
 placeOrder("Veggie");
 placeOrder("Macaroni");
+placeOrder("Agbalumo");
 completeOrder(1);
-console.log("Menu: ", menu)
-console.log("Cash In Register: ", cashInRegister);
+
+console.log("Menu Results: ", menu);
+console.log("Cash In Register Results: ", cashInRegister);
+console.log("Order in Queue Results: ", orderQueue);
