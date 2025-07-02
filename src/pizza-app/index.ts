@@ -26,15 +26,6 @@ const menu: Pizza[] = [
 
 const orderQueue: Order[] = [];
 
-// Adding new Pizza Function
-// Accepts an object without id, assigns id inside
-
-/**
- * Challenge:
- * Fix the addNewPizza function using the Omit utility type. This might
- * require more than just changing the "Pizza" typed `pizzaObj` parameter.
- * Return the new pizza object (with the id added) from the function.
- */
 
 const addNewPizza = (pizzaObj: Omit<Pizza, "id">): Pizza => {
  const newPizza: Pizza = {
@@ -67,6 +58,23 @@ const placeOrder = (pizzaName: string): Order | undefined => {
   orderQueue.push(newOrder);
   return newOrder;
 };
+
+/**
+ * Challenge: add types our generic `addToArray` function. It should work
+ * for adding new pizzas to the `menu` and adding new orders to the `orderQueue`
+ */
+
+const addToArray = <Type>(array: Type[], item: Type): Type[] => {
+    array.push(item)
+    return array
+}
+
+// example usage:
+addToArray<Pizza>(menu, {id: nextPizzaId++, name: "Chicken Bacon Ranch", price: 12 })
+addToArray<Order>(orderQueue, { id: nextOrderId++, pizza: menu[2], status: "completed" })
+
+console.log(menu)
+console.log(orderQueue)
 
 // Completing Order function
 const completeOrder = (orderId: number): Order | undefined => {
@@ -103,6 +111,6 @@ placeOrder("Macaroni");
 placeOrder("Agbalumo");
 completeOrder(1);
 
-console.log("Menu Results: ", menu);
-console.log("Cash In Register Results: ", cashInRegister);
-console.log("Order in Queue Results: ", orderQueue);
+// console.log("Menu Results: ", menu);
+// console.log("Cash In Register Results: ", cashInRegister);
+// console.log("Order in Queue Results: ", orderQueue);

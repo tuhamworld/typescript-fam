@@ -20,7 +20,7 @@ let Drupal:CMS = {
     developers: "Drupal community",
 }
 
-const displayInfo= (CMS) => {
+const displayInfo= (CMS: any) => {
     console.log(`${CMS.name} is developed by ${CMS.developers} in ${CMS.language} language in ${CMS.year}`);
 }
 
